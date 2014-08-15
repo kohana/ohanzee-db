@@ -27,10 +27,10 @@
 		}
 	],
 	"support": {
-		"issues":   "http://dev.kohanaframework.org",
-		"forum":    "http://forum.kohanaframework.org",
-		"irc":      "irc://irc.freenode.net/kohana",
-		"source":   "http://github.com/kohana/ohanzee-db"
+		"source":   "http://github.com/kohana/ohanzee-db",
+		"issues":   "http://github.com/kohana/ohanzee-db/issues",
+		"forum":    "http://discourse.kohanaframework.org/category/ohanzee-components",
+		"irc":      "irc://irc.freenode.net/kohana"
 	},
 	"require": {
 		"kohana/core":         ">=3.3",
