@@ -1,0 +1,5 @@
+# Composer directory
+vendor/
+
+# This is a library
+composer.lock
