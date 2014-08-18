@@ -1,14 +1,15 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
 /**
  * MySQLi database connection.
  *
- * @package    Kohana/Database
+ * @package    Ohanzee/Database
  * @category   Drivers
  * @author     Kohana Team
  * @copyright  (c) 2008-2009 Kohana Team
+ * @copyright  (c) 2014 Ohanzee Contributors
  * @license    http://kohanaphp.com/license
  */
-class Kohana_Database_MySQLi extends Database {
+class Database_MySQLi extends Database {
 
 	// Database in use by each connection
 	protected static $_current_databases = array();
@@ -403,4 +404,4 @@ class Kohana_Database_MySQLi extends Database {
 		return "'$value'";
 	}
 
-} // End Database_MySQLi
+}
