@@ -1,9 +1,6 @@
 <?php
 /**
- * Database connection wrapper/helper.
- *
- * You may get a database instance using `Database::instance('name')` where
- * name is the [config](database/config) group.
+ * Database Abstract
  *
  * This class provides connection instance management via Database Drivers, as
  * well as quoting, escaping and other related functions. Querys are done using
@@ -14,6 +11,7 @@
  * @category   Base
  * @author     Kohana Team
  * @copyright  (c) 2008-2012 Kohana Team
+ * @copyright  (c) 2014 Ohanzee Contributors
  * @license    http://kohanaphp.com/license
  */
 abstract class Database {
