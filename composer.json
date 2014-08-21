@@ -1,6 +1,6 @@
 {
 	"name":        "ohanzee/database",
-	"version":     "0.1.1",
+	"version":     "0.1.2",
 	"description": "Official Ohanzee component for database SQL queries",
 	"homepage":    "http://ohanzee.org/",
 	"license":     "BSD-3-Clause",
@@ -35,6 +35,9 @@
 	"require": {
 		"kohana/core":         ">=3.3",
 		"php":                 ">=5.3.6"
+	},
+	"replace": {
+		"kohana/database": ">=3.3"
 	},
 	"suggest": {
 		"ext-mysql": "*",
