@@ -2,13 +2,18 @@
 
 class MysqliTest extends PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        Dotenv::load(realpath(__DIR__ . '/../../'));
+    }
+
     private function getEnvConfig()
     {
         $config = [
-            'hostname' => @$_ENV['PHPUNIT_TEST_HOSTNAME'],
-            'database' => @$_ENV['PHPUNIT_TEST_DATABASE'],
-            'username' => @$_ENV['PHPUNIT_TEST_USERNAME'],
-            'password' => @$_ENV['PHPUNIT_TEST_PASSWORD'],
+            'hostname' => getenv('PHPUNIT_TEST_HOSTNAME'),
+            'database' => getenv('PHPUNIT_TEST_DATABASE'),
+            'username' => getenv('PHPUNIT_TEST_USERNAME'),
+            'password' => getenv('PHPUNIT_TEST_PASSWORD'),
         ];
 
         return array_filter($config);

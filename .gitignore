@@ -1,5 +1,8 @@
 # Composer directory
 vendor/
 
+# $_ENV config overloading
+.env
+
 # This is a library
 composer.lock
