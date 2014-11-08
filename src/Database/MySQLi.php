@@ -1,14 +1,15 @@
 <?php
 /**
- * MySQL database connection.
+ * MySQLi database connection.
  *
  * @package    Ohanzee/Database
  * @category   Drivers
  * @author     Kohana Team
  * @copyright  (c) 2008-2009 Kohana Team
+ * @copyright  (c) 2014 Ohanzee Contributors
  * @license    http://kohanaphp.com/license
  */
-class Database_MySQL extends Database {
+class Database_MySQLi extends Database {
 
 	// Database in use by each connection
 	protected static $_current_databases = array();
@@ -27,20 +28,21 @@ class Database_MySQL extends Database {
 		if ($this->_connection)
 			return;
 
-		if (Database_MySQL::$_set_names === NULL)
+		if (Database_MySQLi::$_set_names === NULL)
 		{
-			// Determine if we can use mysql_set_charset(), which is only
+			// Determine if we can use mysqli_set_charset(), which is only
 			// available on PHP 5.2.3+ when compiled against MySQL 5.0+
-			Database_MySQL::$_set_names = ! function_exists('mysql_set_charset');
+			Database_MySQLi::$_set_names = ! function_exists('mysqli_set_charset');
 		}
 
 		// Extract the connection parameters, adding required variabels
 		extract($this->_config['connection'] + array(
-			'database'   => '',
-			'hostname'   => '',
-			'username'   => '',
-			'password'   => '',
-			'persistent' => FALSE,
+			'database' => '',
+			'hostname' => '',
+			'username' => '',
+			'password' => '',
+			'socket'   => '',
+			'port'     => 3306,
 		));
 
 		// Prevent this information from showing up in traces
@@ -48,31 +50,18 @@ class Database_MySQL extends Database {
 
 		try
 		{
-			if ($persistent)
-			{
-				// Create a persistent connection
-				$this->_connection = mysql_pconnect($hostname, $username, $password);
-			}
-			else
-			{
-				// Create a connection and force it to be a new link
-				$this->_connection = mysql_connect($hostname, $username, $password, TRUE);
-			}
+			$this->_connection = new mysqli($hostname, $username, $password, $database, $port, $socket);
 		}
 		catch (Exception $e)
 		{
 			// No connection exists
 			$this->_connection = NULL;
 
-			throw new Database_Exception(':error',
-				array(':error' => $e->getMessage()),
-				$e->getCode());
+			throw new Database_Exception(':error', array(':error' => $e->getMessage()), $e->getCode());
 		}
 
 		// \xFF is a better delimiter, but the PHP driver uses underscore
 		$this->_connection_id = sha1($hostname.'_'.$username.'_'.$password);
-
-		$this->_select_db($database);
 
 		if ( ! empty($this->_config['charset']))
 		{
@@ -90,27 +79,8 @@ class Database_MySQL extends Database {
 				$variables[] = 'SESSION '.$var.' = '.$this->quote($val);
 			}
 
-			mysql_query('SET '.implode(', ', $variables), $this->_connection);
+			$this->_connection->query('SET '.implode(', ', $variables));
 		}
-	}
-
-	/**
-	 * Select the database
-	 *
-	 * @param   string  $database Database
-	 * @return  void
-	 */
-	protected function _select_db($database)
-	{
-		if ( ! mysql_select_db($database, $this->_connection))
-		{
-			// Unable to select database
-			throw new Database_Exception(':error',
-				array(':error' => mysql_error($this->_connection)),
-				mysql_errno($this->_connection));
-		}
-
-		Database_MySQL::$_current_databases[$this->_connection_id] = $database;
 	}
 
 	public function disconnect()
@@ -122,7 +92,7 @@ class Database_MySQL extends Database {
 
 			if (is_resource($this->_connection))
 			{
-				if ($status = mysql_close($this->_connection))
+				if ($status = $this->_connection->close())
 				{
 					// Clear the connection
 					$this->_connection = NULL;
@@ -146,22 +116,20 @@ class Database_MySQL extends Database {
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		if (Database_MySQL::$_set_names === TRUE)
+		if (Database_MySQLi::$_set_names === TRUE)
 		{
 			// PHP is compiled against MySQL 4.x
-			$status = (bool) mysql_query('SET NAMES '.$this->quote($charset), $this->_connection);
+			$status = (bool) $this->_connection->query('SET NAMES '.$this->quote($charset));
 		}
 		else
 		{
 			// PHP is compiled against MySQL 5.x
-			$status = mysql_set_charset($charset, $this->_connection);
+			$status = $this->_connection->set_charset($charset);
 		}
 
 		if ($status === FALSE)
 		{
-			throw new Database_Exception(':error',
-				array(':error' => mysql_error($this->_connection)),
-				mysql_errno($this->_connection));
+			throw new Database_Exception(':error', array(':error' => $this->_connection->error), $this->_connection->errno);
 		}
 	}
 
@@ -176,14 +144,8 @@ class Database_MySQL extends Database {
 			$benchmark = Profiler::start("Database ({$this->_instance})", $sql);
 		}
 
-		if ( ! empty($this->_config['connection']['persistent']) AND $this->_config['connection']['database'] !== Database_MySQL::$_current_databases[$this->_connection_id])
-		{
-			// Select database on persistent connections
-			$this->_select_db($this->_config['connection']['database']);
-		}
-
 		// Execute the query
-		if (($result = mysql_query($sql, $this->_connection)) === FALSE)
+		if (($result = $this->_connection->query($sql)) === FALSE)
 		{
 			if (isset($benchmark))
 			{
@@ -191,9 +153,10 @@ class Database_MySQL extends Database {
 				Profiler::delete($benchmark);
 			}
 
-			throw new Database_Exception(':error [ :query ]',
-				array(':error' => mysql_error($this->_connection), ':query' => $sql),
-				mysql_errno($this->_connection));
+			throw new Database_Exception(':error [ :query ]', array(
+				':error' => $this->_connection->error,
+				':query' => $sql
+			), $this->_connection->errno);
 		}
 
 		if (isset($benchmark))
@@ -207,20 +170,20 @@ class Database_MySQL extends Database {
 		if ($type === Database::SELECT)
 		{
 			// Return an iterator of results
-			return new Database_MySQL_Result($result, $sql, $as_object, $params);
+			return new Database_MySQLi_Result($result, $sql, $as_object, $params);
 		}
 		elseif ($type === Database::INSERT)
 		{
 			// Return a list of insert id and rows created
 			return array(
-				mysql_insert_id($this->_connection),
-				mysql_affected_rows($this->_connection),
+				$this->_connection->insert_id,
+				$this->_connection->affected_rows,
 			);
 		}
 		else
 		{
 			// Return the number of rows affected
-			return mysql_affected_rows($this->_connection);
+			return $this->_connection->affected_rows;
 		}
 	}
 
@@ -285,14 +248,14 @@ class Database_MySQL extends Database {
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		if ($mode AND ! mysql_query("SET TRANSACTION ISOLATION LEVEL $mode", $this->_connection))
+		if ($mode AND ! $this->_connection->query("SET TRANSACTION ISOLATION LEVEL $mode"))
 		{
-			throw new Database_Exception(':error',
-				array(':error' => mysql_error($this->_connection)),
-				mysql_errno($this->_connection));
+			throw new Database_Exception(':error', array(
+				':error' => $this->_connection->error
+			), $this->_connection->errno);
 		}
 
-		return (bool) mysql_query('START TRANSACTION', $this->_connection);
+		return (bool) $this->_connection->query('START TRANSACTION');
 	}
 
 	/**
@@ -305,7 +268,7 @@ class Database_MySQL extends Database {
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		return (bool) mysql_query('COMMIT', $this->_connection);
+		return (bool) $this->_connection->query('COMMIT');
 	}
 
 	/**
@@ -318,7 +281,7 @@ class Database_MySQL extends Database {
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		return (bool) mysql_query('ROLLBACK', $this->_connection);
+		return (bool) $this->_connection->query('ROLLBACK');
 	}
 
 	public function list_tables($like = NULL)
@@ -430,15 +393,15 @@ class Database_MySQL extends Database {
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 
-		if (($value = mysql_real_escape_string( (string) $value, $this->_connection)) === FALSE)
+		if (($value = $this->_connection->real_escape_string( (string) $value)) === FALSE)
 		{
-			throw new Database_Exception(':error',
-				array(':error' => mysql_error($this->_connection)),
-				mysql_errno($this->_connection));
+			throw new Database_Exception(':error', array(
+				':error' => $this->_connection->error,
+			), $this->_connection->errno);
 		}
 
 		// SQL standard is to use single-quotes for all values
 		return "'$value'";
 	}
 
-} // End Database_MySQL
+}

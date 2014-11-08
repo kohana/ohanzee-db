@@ -44,5 +44,9 @@
     },
     "autoload": {
         "psr-0": { "": "src/" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*",
+        "vlucas/phpdotenv": "~1.0"
     }
 }
