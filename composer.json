@@ -1,49 +1,48 @@
 {
-	"name":        "ohanzee/database",
-	"version":     "0.1.2",
-	"description": "Official Ohanzee component for database SQL queries",
-	"homepage":    "http://ohanzee.org/",
-	"license":     "BSD-3-Clause",
-	"keywords":    [
-		"kohana",
-		"ohanzee",
-		"component",
-		"database",
-		"db",
-		"sql",
-		"query builder"
-	],
-	"authors": [
-		{
-			"name":     "Kohana Team",
-			"email":    "team@kohanaframework.org",
-			"homepage": "http://kohanaframework.org/team",
-			"role":     "developer"
-		},
-		{
-			"name":     "Ohanzee Contributors",
-			"homepage": "http://ohanzee.org/contributors.html",
-			"role":     "developer"
-		}
-	],
-	"support": {
-		"source":   "http://github.com/kohana/ohanzee-db",
-		"issues":   "http://github.com/kohana/ohanzee-db/issues",
-		"forum":    "http://discourse.kohanaframework.org/category/ohanzee-components",
-		"irc":      "irc://irc.freenode.net/kohana"
-	},
-	"require": {
-		"kohana/core":         ">=3.3",
-		"php":                 ">=5.3.6"
-	},
-	"replace": {
-		"kohana/database": ">=3.3"
-	},
-	"suggest": {
-		"ext-mysql": "*",
-		"ext-pdo":   "*"
-	},
-	"autoload": {
-		"psr-0": { "": "src/" }
-	}
+    "name":        "ohanzee/database",
+    "description": "Ohanzee component for database SQL queries and query building",
+    "homepage":    "http://ohanzee.org/",
+    "license":     "BSD-3-Clause",
+    "keywords":    [
+        "kohana",
+        "ohanzee",
+        "component",
+        "database",
+        "db",
+        "sql",
+        "query builder"
+    ],
+    "authors": [
+        {
+            "name":     "Kohana Team",
+            "email":    "team@kohanaframework.org",
+            "homepage": "http://kohanaframework.org/team",
+            "role":     "developer"
+        },
+        {
+            "name":     "Ohanzee Contributors",
+            "homepage": "http://ohanzee.org/contributors.html",
+            "role":     "developer"
+        }
+    ],
+    "support": {
+        "source":   "http://github.com/kohana/ohanzee-db",
+        "issues":   "http://github.com/kohana/ohanzee-db/issues",
+        "forum":    "http://discourse.kohanaframework.org/category/ohanzee-components",
+        "irc":      "irc://irc.freenode.net/kohana"
+    },
+    "require": {
+        "kohana/core":         ">=3.3",
+        "php":                 ">=5.4"
+    },
+    "replace": {
+        "kohana/database": ">=3.3"
+    },
+    "suggest": {
+        "ext-mysql": "*",
+        "ext-pdo":   "*"
+    },
+    "autoload": {
+        "psr-0": { "": "src/" }
+    }
 }
