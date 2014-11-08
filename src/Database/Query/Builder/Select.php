@@ -8,7 +8,12 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Database_Query_Builder_Select extends Database_Query_Builder_Where {
+namespace Ohanzee\Database\Query\Builder;
+
+use Ohanzee\Database;
+use Ohanzee\Database\Query\Builder\Where;
+
+class Select extends Where {
 
 	// SELECT ...
 	protected $_select = array();

@@ -16,7 +16,9 @@
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Database_Expression {
+namespace Ohanzee\Database;
+
+class Expression {
 
 	// Unquoted parameters
 	protected $_parameters;

@@ -8,7 +8,11 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Database_Query_Builder extends Database_Query {
+namespace Ohanzee\Database\Query;
+
+use Ohanzee\Database\Query;
+
+abstract class Builder extends Query {
 
 	/**
 	 * Compiles an array of JOIN statements into an SQL partial.

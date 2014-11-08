@@ -8,7 +8,13 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Database_Query_Builder_Delete extends Database_Query_Builder_Where {
+namespace Ohanzee\Database\Query\Builder;
+
+use Ohanzee\Database;
+use Ohanzee\Database\Query\Builder;
+use Ohanzee\Database\Query\Builder\Where;
+
+class Delete extends Where {
 
 	// DELETE FROM ...
 	protected $_table;

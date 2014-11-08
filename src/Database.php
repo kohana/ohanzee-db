@@ -14,6 +14,8 @@
  * @copyright  (c) 2014 Ohanzee Contributors
  * @license    http://kohanaphp.com/license
  */
+namespace Ohanzee;
+
 abstract class Database {
 
 	// Query types

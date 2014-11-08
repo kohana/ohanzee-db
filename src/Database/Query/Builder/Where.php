@@ -8,7 +8,11 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-abstract class Database_Query_Builder_Where extends Database_Query_Builder {
+namespace Ohanzee\Database\Query\Builder;
+
+use Ohanzee\Database\Query\Builder;
+
+abstract class Where extends Builder {
 
 	// WHERE ...
 	protected $_where = array();

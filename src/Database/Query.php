@@ -8,7 +8,9 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Database_Query {
+namespace Ohanzee\Database;
+
+class Query {
 
 	// Query type
 	protected $_type;

@@ -8,7 +8,12 @@
  * @copyright  (c) 2008-2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
-class Database_Query_Builder_Insert extends Database_Query_Builder {
+namespace Ohanzee\Database\Query\Builder;
+
+use Ohanzee\Database;
+use Ohanzee\Database\Query\Builder;
+
+class Insert extends Builder {
 
 	// INSERT INTO ...
 	protected $_table;

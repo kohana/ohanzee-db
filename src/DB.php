@@ -19,6 +19,13 @@
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license
  */
+
+namespace Ohanzee;
+
+use Ohanzee\Database\Expression;
+use Ohanzee\Database\Query;
+use Ohanzee\Database\Query\Builder;
+
 class DB {
 
 	/**
@@ -41,7 +48,7 @@ class DB {
 	 */
 	public static function query($type, $sql)
 	{
-		return new Database_Query($type, $sql);
+		return new Query($type, $sql);
 	}
 
 	/**
@@ -59,7 +66,7 @@ class DB {
 	 */
 	public static function select($columns = NULL)
 	{
-		return new Database_Query_Builder_Select(func_get_args());
+		return new Builder\Select(func_get_args());
 	}
 
 	/**
@@ -73,7 +80,7 @@ class DB {
 	 */
 	public static function select_array(array $columns = NULL)
 	{
-		return new Database_Query_Builder_Select($columns);
+		return new Builder\Select($columns);
 	}
 
 	/**
@@ -88,7 +95,7 @@ class DB {
 	 */
 	public static function insert($table = NULL, array $columns = NULL)
 	{
-		return new Database_Query_Builder_Insert($table, $columns);
+		return new Builder\Insert($table, $columns);
 	}
 
 	/**
@@ -102,7 +109,7 @@ class DB {
 	 */
 	public static function update($table = NULL)
 	{
-		return new Database_Query_Builder_Update($table);
+		return new Builder\Update($table);
 	}
 
 	/**
@@ -116,7 +123,7 @@ class DB {
 	 */
 	public static function delete($table = NULL)
 	{
-		return new Database_Query_Builder_Delete($table);
+		return new Builder\Delete($table);
 	}
 
 	/**
@@ -133,7 +140,7 @@ class DB {
 	 */
 	public static function expr($string, $parameters = array())
 	{
-		return new Database_Expression($string, $parameters);
+		return new Expression($string, $parameters);
 	}
 
 } // End DB
