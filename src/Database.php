@@ -54,10 +54,10 @@ abstract class Database {
 		if ($name === NULL)
 		{
 			// Use the default instance name
-			$name = Database::$default;
+			$name = static::$default;
 		}
 
-		if ( ! isset(Database::$instances[$name]))
+		if ( ! isset(static::$instances[$name]))
 		{
 			if ($config === NULL)
 			{
@@ -78,10 +78,10 @@ abstract class Database {
 			$driver = new $driver($name, $config);
 
 			// Store the database instance
-			Database::$instances[$name] = $driver;
+			static::$instances[$name] = $driver;
 		}
 
-		return Database::$instances[$name];
+		return static::$instances[$name];
 	}
 
 	/**
@@ -171,7 +171,7 @@ abstract class Database {
 	 */
 	public function disconnect()
 	{
-		unset(Database::$instances[$this->_instance]);
+		unset(static::$instances[$this->_instance]);
 
 		return TRUE;
 	}
@@ -263,7 +263,7 @@ abstract class Database {
 		// Quote the table name
 		$table = $this->quote_table($table);
 
-		return $this->query(Database::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, FALSE)
+		return $this->query(static::SELECT, 'SELECT COUNT(*) AS total_row_count FROM '.$table, FALSE)
 			->get('total_row_count');
 	}
 
